@@ -52,7 +52,6 @@ jobs:
           node-version: 18
       - name: Build the node.js application
         run: |
-          ls -la
           cd src
           npm init -y
           npm install aws-sdk sharp
