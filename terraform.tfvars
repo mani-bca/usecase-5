@@ -1,6 +1,6 @@
-aws_region             = "us-east-1"
+aws_region  = "us-east-1"
 tags = {
-  Project     = "Image Resizing Service"
+  Project     = "Image-Resizing-Service"
   Environment = "Production"
   ManagedBy   = "Terraform"
 }
