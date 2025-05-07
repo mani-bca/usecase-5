@@ -46,6 +46,16 @@ jobs:
           role-to-assume: ${{ secrets.AWS_OIDC_ROLE_ARN }}
           aws-region: ${{ env.AWS_REGION }}
 
+      - name: setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - name: Build the node.js application
+        run: |
+          cd src
+          npm init -y
+          npm install aws-sdk sharp
+          
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
