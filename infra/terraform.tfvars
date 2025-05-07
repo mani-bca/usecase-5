@@ -1,7 +1,7 @@
 aws_region  = "us-east-1"
 tags = {
-  Project     = "Image-Resizing-Service"
-  Environment = "Production"
+  Project     = "Image-Resizing"
+  Environment = "dev"
   ManagedBy   = "Terraform"
 }
 source_bucket_name     = "source-bucket-unique"
