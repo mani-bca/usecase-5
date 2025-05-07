@@ -1,7 +1,6 @@
-
 # S3 Bucket for original images
 module "s3_bucket_original" {
-  source = "git::https://github.com/mani-bca/set-aws-infra.git//modules/s3?ref=370598e"
+  source = "git::https://github.com/mani-bca/set-aws-infra.git//modules/s3?ref=main"
 
   bucket_name         = var.source_bucket_name
   tags                = var.tags
@@ -12,7 +11,7 @@ module "s3_bucket_original" {
 
 # S3 Bucket for resized images
 module "s3_bucket_resized" {
-  source = "git::https://github.com/mani-bca/set-aws-infra.git//modules/s3?ref=370598e"
+  source = "git::https://github.com/mani-bca/set-aws-infra.git//modules/s3?ref=main"
 
   bucket_name = var.destination_bucket_name
   tags        = var.tags
@@ -20,7 +19,7 @@ module "s3_bucket_resized" {
 
 # SNS Topic for notifications
 module "sns_topic" {
-  source = "git::https://github.com/mani-bca/set-aws-infra.git//modules/sns?ref=370598e"
+  source = "git::https://github.com/mani-bca/set-aws-infra.git//modules/sns?ref=main"
 
   topic_name       = var.sns_topic_name
   email_addresses  = var.notification_emails
@@ -29,7 +28,7 @@ module "sns_topic" {
 
 # Lambda function for image resizing
 module "lambda_resize" {
-  source = "git::https://github.com/mani-bca/set-aws-infra.git//modules/lambda?ref=370598e"
+  source = "git::https://github.com/mani-bca/set-aws-infra.git//modules/lambda?ref=main"
 
   function_name         = var.lambda_function_name
   lambda_source_file    = "${path.module}/src/resize_image.js"

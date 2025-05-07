@@ -1,4 +1,3 @@
-
 # S3 Bucket for original images
 module "s3_bucket_original" {
   source = "git::https://github.com/mani-bca/set-aws-infra.git//modules/s3?ref=370598e"
