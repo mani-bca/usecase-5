@@ -1,4 +1,4 @@
-# AWS Serverless Image Resizing Solution
+# AWS Serverless Image Resizing Solutione
 
 This Terraform project creates an automated image resizing solution in AWS using serverless technologies:
 
