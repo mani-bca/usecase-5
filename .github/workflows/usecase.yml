@@ -52,10 +52,10 @@ jobs:
           node-version: 18
       - name: Build the node.js application
         run: |
-          cd infra/src
+          ls -la
+          cd src
           npm init -y
           npm install aws-sdk sharp
-
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
