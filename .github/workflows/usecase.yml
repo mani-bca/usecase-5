@@ -1,4 +1,4 @@
-name: Terraform Two Tier Workflow
+name: Terraform image resize
 
 on:
   pull_request:
