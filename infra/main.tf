@@ -1,5 +1,4 @@
 
-# S3 Bucket for original images
 module "s3_bucket_original" {
   source = "git::https://github.com/mani-bca/set-aws-infra.git//modules/s3?ref=main"
 
@@ -10,7 +9,6 @@ module "s3_bucket_original" {
   lambda_permission   = module.lambda_resize.s3_permission
 }
 
-# S3 Bucket for resized images
 module "s3_bucket_resized" {
   source = "git::https://github.com/mani-bca/set-aws-infra.git//modules/s3?ref=main"
 
@@ -18,7 +16,6 @@ module "s3_bucket_resized" {
   tags        = var.tags
 }
 
-# SNS Topic for notifications
 module "sns_topic" {
   source = "git::https://github.com/mani-bca/set-aws-infra.git//modules/sns?ref=main"
 
@@ -27,7 +24,6 @@ module "sns_topic" {
   tags             = var.tags
 }
 
-# Lambda function for image resizing
 module "lambda_resize" {
   source = "git::https://github.com/mani-bca/set-aws-infra.git//modules/lambda?ref=main"
 
