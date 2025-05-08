@@ -33,7 +33,7 @@ module "lambda_resize" {
   function_name         = var.lambda_function_name
   lambda_source_file    = "${path.module}/src/resize_image.js"
   handler               = "resize_image.handler"
-  runtime               = "nodejs18.x"
+  runtime               = "nodejs19.x"
   timeout               = 60
   memory_size           = 256
   enable_s3_trigger     = true
