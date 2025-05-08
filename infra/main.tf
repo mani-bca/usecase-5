@@ -1,4 +1,51 @@
 
+module "lambda_iam" {
+  source = "git::https://github.com/mani-bca/set-aws-infra.git//modules/iam?ref=main"
+
+  role_name           = "${var.lambda_function_name}-role"
+  policy_name         = "${var.lambda_function_name}-policy"
+  policy_description  = "IAM policy for Lambda function ${var.lambda_function_name}"
+  service_principal   = "lambda.amazonaws.com"
+  enable_s3_trigger   = true
+  function_name       = var.lambda_function_name
+  s3_bucket_arn       = module.s3_bucket_original.bucket_arn
+  
+  policy_statements = [
+    {
+      Action = [
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents"
+      ]
+      Effect   = "Allow"
+      Resource = "arn:aws:logs:*:*:*"
+    },
+    {
+      Action = [
+        "s3:GetObject"
+      ]
+      Effect   = "Allow"
+      Resource = "${module.s3_bucket_original.bucket_arn}/*"
+    },
+    {
+      Action = [
+        "s3:PutObject"
+      ]
+      Effect   = "Allow"
+      Resource = "${module.s3_bucket_resized.bucket_arn}/*"
+    },
+    {
+      Action = [
+        "sns:Publish"
+      ]
+      Effect   = "Allow"
+      Resource = module.sns_topic.topic_arn
+    }
+  ]
+
+  tags = var.tags
+}
+
 module "s3_bucket_original" {
   source = "git::https://github.com/mani-bca/set-aws-infra.git//modules/s3?ref=main"
 
@@ -33,37 +80,13 @@ module "lambda_resize" {
   runtime               = "nodejs18.x"
   timeout               = 60
   memory_size           = 256
-  enable_s3_trigger     = true
-  s3_bucket_arn         = module.s3_bucket_original.bucket_arn
+  # enable_s3_trigger     = true
+  # s3_bucket_arn         = module.s3_bucket_original.bucket_arn
   
   environment_variables = {
     DESTINATION_BUCKET = module.s3_bucket_resized.bucket_id
     SNS_TOPIC_ARN      = module.sns_topic.topic_arn
     RESIZE_WIDTH       = var.resize_width
   }
-
-  additional_policy_statements = [
-    {
-      Action = [
-        "s3:GetObject"
-      ]
-      Effect   = "Allow"
-      Resource = "${module.s3_bucket_original.bucket_arn}/*"
-    },
-    {
-      Action = [
-        "s3:PutObject"
-      ]
-      Effect   = "Allow"
-      Resource = "${module.s3_bucket_resized.bucket_arn}/*"
-    },
-    {
-      Action = [
-        "sns:Publish"
-      ]
-      Effect   = "Allow"
-      Resource = module.sns_topic.topic_arn
-    }
-  ]
   tags = var.tags
 }
