@@ -1,7 +1,6 @@
 name: Terraform image resize
 
 on:
-  push:
   pull_request:
     types: [opened, synchronize, reopened]
     # paths:
@@ -49,11 +48,22 @@ jobs:
 
       - name: Generate terraform docs
         uses: terraform-docs/gh-actions@main
-        with:           
+        with:          
           working-dir: ./infra
+          git-push: true
           output-file: README.md
           output-method: inject
-          git-push: "true"
+          config-file: disabled
+          atlantis-file: disabled
+          find-dir: disabled
+          recursive: false
+          recursive-path: modules
+          output-format: markdown table
+          output-template: <!-- BEGIN_TF_DOCS -->\n{{ .Content }}\n<!-- END_TF_DOCS -->"
+          indention: 2
+          git-commit-message: terraform-docs:automated action
+          git-push-sign-off: false
+          fail-on-diff: false
 
       # - name: setup Node.js
       #   uses: actions/setup-node@v4
