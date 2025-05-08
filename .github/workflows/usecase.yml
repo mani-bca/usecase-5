@@ -38,7 +38,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
         with:
-          ref: ${{ github.event.pull_request.head.ref || github.ref }}
+          ref: ${{ github.event.pull_request.head.ref || github.head_ref }}
 
       - name: Generate terraform docs
         uses: terraform-docs/gh-actions@main
