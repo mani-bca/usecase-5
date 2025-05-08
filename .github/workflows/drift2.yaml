@@ -1,0 +1,95 @@
+name: Terraform Drift Detection
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # Runs daily at midnight
+  workflow_dispatch: # Allows manual triggering
+
+env:
+  AWS_REGION: us-east-1
+  TF_VERSION: '1.10.1'
+  TF_VAR_environment: 'dev'
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  drift-check:
+    name: Terraform Drift Detection
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: 'infra'
+    
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+      
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
+      
+      - name: Configure AWS Credentials via OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_OIDC_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+      
+      - name: Terraform Init
+        run: terraform init
+      
+      - name: Terraform Plan (Detect Drift) with Detailed Output
+        id: drift_detection
+        run: |
+          # Save the detailed plan output to a file
+          terraform plan -no-color > drift_plan.txt
+          
+          # Determine if there's drift using detailed exit code
+          terraform plan -detailed-exitcode 2>&1 || echo "Drift detected with exit code $?"
+          
+          # Check for changes in the plan output
+          if grep -q "No changes" drift_plan.txt; then
+            echo "No drift detected."
+            echo "drift_exists=false" >> $GITHUB_ENV
+          else
+            echo "Drift detected!"
+            echo "drift_exists=true" >> $GITHUB_ENV
+            
+            # Extract and highlight the resources that will change
+            echo "::group::Resources with drift detected"
+            grep -A 100 "Terraform will perform the following actions:" drift_plan.txt | grep -B 2 -A 5 "will be" || true
+            echo "::endgroup::"
+          fi
+      
+      - name: Upload Detailed Drift Report
+        if: env.drift_exists == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: terraform-drift-report
+          path: infra/drift_plan.txt
+          retention-days: 7
+      
+      - name: Post Drift Summary as Comment
+        if: env.drift_exists == 'true' && github.event_name == 'pull_request'
+        run: |
+          # Create a summary of drifted resources
+          echo "## ⚠️ Infrastructure Drift Detected" > drift_summary.md
+          echo "" >> drift_summary.md
+          echo "The following resources have drifted from the Terraform state:" >> drift_summary.md
+          echo '```' >> drift_summary.md
+          grep -A 100 "Terraform will perform the following actions:" drift_plan.txt | grep -B 2 -A 5 "will be" | head -n 50 >> drift_summary.md
+          echo '```' >> drift_summary.md
+          echo "" >> drift_summary.md
+          echo "Full drift report is available in the workflow artifacts." >> drift_summary.md
+          
+          # Use GitHub CLI to post comment (you'll need to add permissions for this)
+          # gh pr comment ${{ github.event.pull_request.number }} -F drift_summary.md
+      
+      - name: Send Notification on Drift
+        if: env.drift_exists == 'true'
+        run: |
+          echo "::warning ::Infrastructure drift detected! See the drift report for details."
+          # You could add additional notification methods here (Slack, email, etc.)
+```
