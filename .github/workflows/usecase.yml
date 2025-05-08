@@ -43,7 +43,7 @@ jobs:
       - name: Generate terraform docs
         uses: terraform-docs/gh-actions@main
         with:           
-          working-dir: .
+          working-dir: ./infra
           git-push: true
           output-file: README.md
           output-method: inject
