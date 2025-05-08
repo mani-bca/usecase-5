@@ -53,7 +53,7 @@ module "s3_bucket_original" {
   tags                = var.tags
   enable_notification = true
   lambda_function_arn = module.lambda_resize.function_arn
-  lambda_permission   = module.lambda_resize.s3_permission
+  lambda_permission   = module.lambda_iam.s3_permission
 }
 
 module "s3_bucket_resized" {
