@@ -36,7 +36,6 @@ No resources.
 | <a name="input_sns_topic_name"></a> [sns\_topic\_name](#input\_sns\_topic\_name) | Name of the SNS topic | `string` | n/a | yes |
 | <a name="input_source_bucket_name"></a> [source\_bucket\_name](#input\_source\_bucket\_name) | Name of the S3 bucket for original images | `string` | n/a | yes |
 | <a name="input_tags"></a> [tags](#input\_tags) | Tags to apply to all resources | `map(string)` | `{}` | no |
-| <a name="input_tagss"></a> [tagss](#input\_tagss) | Tags to apply to all resources | `map(string)` | `{}` | no |
 
 ## Outputs
 
