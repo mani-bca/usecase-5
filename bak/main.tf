@@ -70,3 +70,5 @@ module "lambda_resize" {
   ]
   tags = var.tags
 }
+
+#new line is added 
