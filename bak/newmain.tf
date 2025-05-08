@@ -87,7 +87,7 @@ module "lambda_resize" {
   handler               = "resize_image.handler"
   runtime               = "nodejs18.x"
   timeout               = 60
-  memory_size           = 256
+  memory_size           = 800
   role_arn              = module.lambda_iam.role_arn
   
   environment_variables = {
