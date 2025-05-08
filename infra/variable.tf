@@ -40,3 +40,8 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
+variable "tagss" {
+  description = "Tags to apply to all resources"
+  type        = map(string)
+  default     = {}
+}

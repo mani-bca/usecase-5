@@ -1,6 +1,7 @@
 name: Terraform image resize
 
 on:
+  push:
   pull_request:
     types: [opened, synchronize, reopened]
     # paths:
