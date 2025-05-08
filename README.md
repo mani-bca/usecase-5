@@ -1,5 +1,63 @@
 # AWS Serverless Image Resizing Solutionev
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 This Terraform project creates an automated image resizing solution in AWS using serverless technologies:
 
 - **S3** for storage of original and resized images

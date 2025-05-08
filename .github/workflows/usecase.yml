@@ -3,8 +3,8 @@ name: Terraform image resize
 on:
   pull_request:
     types: [opened, synchronize, reopened]
-    paths:
-      - 'infra/**'
+    # paths:
+    #   - 'infra/**'
   workflow_dispatch:
     inputs:
       action:
