@@ -2,8 +2,8 @@ name: Terraform Drift Detection
 
 on:
   schedule:
-    - cron: '0 0 * * *' # Runs daily at midnight
-  workflow_dispatch: # Allows manual triggering
+    - cron: '0 0 * * *' 
+  workflow_dispatch:
 
 env:
   AWS_REGION: us-east-1
@@ -50,5 +50,3 @@ jobs:
         run: |
           echo "::warning ::Infrastructure drift detected!"
           echo "Terraform detected differences between the current state and the defined configuration."
-          # Optionally send notification here (e.g., Slack, email)
-```
