@@ -80,6 +80,7 @@ module "lambda_resize" {
   runtime               = "nodejs18.x"
   timeout               = 60
   memory_size           = 256
+  role_arn              = module.lambda_iam.role_arn
   # enable_s3_trigger     = true
   # s3_bucket_arn         = module.s3_bucket_original.bucket_arn
   
