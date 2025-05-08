@@ -1,0 +1,54 @@
+name: Terraform Drift Detection
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # Runs daily at midnight
+  workflow_dispatch: # Allows manual triggering
+
+env:
+  AWS_REGION: us-east-1
+  TF_VERSION: '1.10.1'
+  TF_VAR_environment: 'dev'
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  drift-check:
+    name: Terraform Drift Detection
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: 'infra'
+    
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+      
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
+      
+      - name: Configure AWS Credentials via OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_OIDC_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+      
+      - name: Terraform Init
+        run: terraform init
+      
+      - name: Terraform Plan (Detect Drift)
+        id: drift_detection
+        run: |
+          terraform plan -detailed-exitcode || echo "Drift detected!"
+      
+      - name: Check for Drift
+        if: steps.drift_detection.outcome == 'failure' && steps.drift_detection.exitcode == 2
+        run: |
+          echo "::warning ::Infrastructure drift detected!"
+          echo "Terraform detected differences between the current state and the defined configuration."
+          # Optionally send notification here (e.g., Slack, email)
+```
