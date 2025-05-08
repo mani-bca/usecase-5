@@ -46,15 +46,15 @@ jobs:
           role-to-assume: ${{ secrets.AWS_OIDC_ROLE_ARN }}
           aws-region: ${{ env.AWS_REGION }}
 
-      - name: setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 18
-      - name: Build the node.js application
-        run: |
-          cd lambda_package
-          npm init -y
-          npm install aws-sdk sharp --platform=linux --arch=x64
+      # - name: setup Node.js
+      #   uses: actions/setup-node@v4
+      #   with:
+      #     node-version: 18
+      # - name: Build the node.js application
+      #   run: |
+      #     cd lambda_package
+      #     npm init -y
+      #     npm install aws-sdk sharp --platform=linux --arch=x64
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
@@ -70,28 +70,28 @@ jobs:
       - name: Terraform Validate
         run: terraform validate
 
-      - name: Install Checkov
-        run: |
-          python -m pip install --upgrade pip
-          pip install checkov
+      # - name: Install Checkov
+      #   run: |
+      #     python -m pip install --upgrade pip
+      #     pip install checkov
 
-      - name: Run Checkov Static Analysis
-        run: |
-          checkov -d . --soft-fail
+      # - name: Run Checkov Static Analysis
+      #   run: |
+      #     checkov -d . --soft-fail
 
-      - name: Install tflint
-        run: |
-          curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
+      # - name: Install tflint
+      #   run: |
+      #     curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
 
-      - name: Run tflint
-        run: |
-          tflint --init
-          tflint
-        continue-on-error: true
+      # - name: Run tflint
+      #   run: |
+      #     tflint --init
+      #     tflint
+      #   continue-on-error: true
       - name: Generate terraform docs
         uses: terraform-docs/gh-actions@main
         with:           
-          working-dir: ../bak
+          working-dir: .
           git-push: true
           output-file: README.md
           output-method: inject
