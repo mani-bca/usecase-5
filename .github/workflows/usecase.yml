@@ -91,7 +91,7 @@ jobs:
       - name: Generate terraform docs
         uses: terraform-docs/gh-actions@main
         with:           
-          working-dir: bak
+          working-dir: .
           git-push: true
           output-file: README.md
           output-method: inject
@@ -137,4 +137,3 @@ jobs:
           path: infra/log.txt
           retention-days: 30
 
-          
